@@ -1,0 +1,31 @@
+{
+  "name": "anatomia",
+  "version": "0.0.1",
+  "description": "Smart JavaScript analyzer",
+  "main": "",
+  "author": {
+    "name": "Krasimir Tsonev",
+    "email": "info@krasimirtsonev.com",
+    "url": "http://krasimirtsonev.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "escodegen": "1.6.1",
+    "esprima": "1.2.5",
+    "estraverse": "1.9.3",
+  },
+  "devDependencies": {
+    "mocha": "2.0.1",
+    "jshint": "2.5.10"
+  },
+  "keywords": [
+    "ast",
+    "analyze",
+    "anatomy",
+    "architecture"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krasimir/anatomia.git"
+  }
+}
