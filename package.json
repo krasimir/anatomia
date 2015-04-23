@@ -12,7 +12,7 @@
   "dependencies": {
     "escodegen": "1.6.1",
     "esprima": "1.2.5",
-    "estraverse": "1.9.3",
+    "estraverse": "1.9.3"
   },
   "devDependencies": {
     "mocha": "2.0.1",
