@@ -1,4 +1,4 @@
 var m = require('../app');
-var complex = function() {
+var foo = 'bar'; var complex = function() {
   return 2 + 2;
 }
