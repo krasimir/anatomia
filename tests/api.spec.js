@@ -3,6 +3,13 @@ var _ = require('lodash');
 
 suite('Core API', function() {
 
+  var displayFounds = function(found, source) {
+    var anatomia = require('../lib')();
+    found.forEach(function(f) {
+      console.log(anatomia.translator.locToString(f.loc, source));
+    });
+  }
+
   test('> Is there API available', function(done) {
     var anatomia = require('../lib')();
     assert(typeof anatomia.version !== 'undefined');
@@ -74,9 +81,7 @@ suite('Core API', function() {
       anatomia.finder.query(searchFor, item.tree, function(err, found) {
         assert.equal(err, null);
         assert(found && found.length > 0);
-        // found.forEach(function(f) {
-        //   console.log(anatomia.translator.locToString(f.loc, item.source));
-        // });
+        
         done();
       });
     });
@@ -90,6 +95,20 @@ suite('Core API', function() {
       anatomia.finder.query(searchFor, item.tree, function(err, found) {
         assert.equal(err, null);
         assert.equal(found.length, 11);
+        done();
+      });
+    });
+  });
+
+  test('> finding using all as a method name', function(done) {
+    var anatomia = require('../lib')();
+    var searchFor = 'field._all_()';
+    anatomia.translator.read(__dirname + '/data/other/complex.js', function(err, trees) {
+      var item = trees.pop();
+      anatomia.finder.query(searchFor, item.tree, function(err, found) {
+        assert.equal(err, null);
+        assert.equal(found.length, 7);
+        // displayFounds(found, item.source);
         done();
       });
     });
