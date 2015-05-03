@@ -66,4 +66,33 @@ suite('Core API', function() {
     });
   });
 
+  test('> finding using all keyword', function(done) {
+    var anatomia = require('../lib')();
+    var searchFor = 'var _all_';
+    anatomia.translator.read(__dirname + '/data/other/complex.js', function(err, trees) {
+      var item = trees.pop();
+      anatomia.finder.query(searchFor, item.tree, function(err, found) {
+        assert.equal(err, null);
+        assert(found && found.length > 0);
+        // found.forEach(function(f) {
+        //   console.log(anatomia.translator.locToString(f.loc, item.source));
+        // });
+        done();
+      });
+    });
+  });
+
+  test('> finding requires', function(done) {
+    var anatomia = require('../lib')();
+    var searchFor = 'require()';
+    anatomia.translator.read(__dirname + '/data/other/complex.js', function(err, trees) {
+      var item = trees.pop();
+      anatomia.finder.query(searchFor, item.tree, function(err, found) {
+        assert.equal(err, null);
+        assert.equal(found.length, 11);
+        done();
+      });
+    });
+  });
+
 });
