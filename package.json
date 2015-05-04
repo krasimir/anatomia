@@ -13,6 +13,7 @@
     "escodegen": "1.6.1",
     "esprima": "1.2.5",
     "estraverse": "4.0.0",
+    "falafel": "1.0.1",
     "glob": "5.0.5",
     "lodash": "3.7.0"
   },
