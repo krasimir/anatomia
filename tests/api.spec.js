@@ -3,22 +3,21 @@ var _ = require('lodash');
 
 suite('Core API', function() {
 
+  var anatomia = require('../lib')();
+
   var displayFounds = function(found, source) {
-    var anatomia = require('../lib')();
     found.forEach(function(f) {
       console.log(anatomia.translator.locToString(f.loc, source));
     });
   }
 
-  test('> Is there API available', function(done) {
-    var anatomia = require('../lib')();
+  test('Is there API available', function(done) {
     assert(typeof anatomia.version !== 'undefined');
     assert(anatomia.version(), 'string');
     done();
   });
 
-  test('> translating', function(done) {
-    var anatomia = require('../lib')();
+  test('translating', function(done) {
     anatomia.translator.read([
       __dirname + '/data/app/**/*.js',
       __dirname + '/data/other/**/*.js',      
@@ -31,12 +30,12 @@ suite('Core API', function() {
     });
   });
 
-  test('> finding', function(done) {
-    var anatomia = require('../lib')();
+  test('finding', function(done) {
     var searchFor = 'answer + addition;';
     anatomia.translator.read(__dirname + '/data/app/folder/module.js', function(err, trees) {
       var item = trees.pop();
-      anatomia.finder.query(searchFor, item.tree, function(err, found) {
+      anatomia.finder.query(searchFor, item.tree, { exact: true }, function(err, found) {
+        assert.equal(found.length, 1);
         var str = anatomia.translator.locToString(found[0].loc, item.source);
         assert.equal(searchFor, str);
         done();
@@ -44,70 +43,51 @@ suite('Core API', function() {
     });
   });
 
-  test('> finding multiline', function(done) {
-    var anatomia = require('../lib')();
+  test('finding multiline', function(done) {
     var searchFor = 'var complex = function() {\n\
-  return 2 + 2;\n\
-}';
+      return 2 + 2;\n\
+    }';
     anatomia.translator.read(__dirname + '/data/other/helper.js', function(err, trees) {
       var item = trees.pop();
       anatomia.finder.query(searchFor, item.tree, function(err, found) {
         assert.equal(err, null);
-        var str = anatomia.translator.locToString(found[0].loc, item.source);
-        assert.equal(searchFor, 'var ' + str); // the loc value doesn't include "var"
+        assert.equal(found.length, 1);
         done();
       });
     });
   });
 
-  test('> finding in complex tree', function(done) {
-    var anatomia = require('../lib')();
-    var searchFor = 'self.fire()';
-    anatomia.translator.read(__dirname + '/data/other/complex.js', function(err, trees) {
+  test('finding in complex tree', function(done) {
+    var searchFor = 'this.choices_count()';
+    anatomia.translator.read(__dirname + '/data/other/chosen.proto.js', function(err, trees) {
       var item = trees.pop();
       anatomia.finder.query(searchFor, item.tree, function(err, found) {
         assert.equal(err, null);
-        assert.equal(found.length, 6);
+        assert.equal(found.length, 121);
         done();
       });
     });
   });
 
-  test('> finding using all keyword', function(done) {
-    var anatomia = require('../lib')();
-    var searchFor = 'var _all_';
-    anatomia.translator.read(__dirname + '/data/other/complex.js', function(err, trees) {
+  test('variable definition', function(done) {
+    var searchFor = 'var something';
+    anatomia.translator.read(__dirname + '/data/other/specific.js', function(err, trees) {
       var item = trees.pop();
       anatomia.finder.query(searchFor, item.tree, function(err, found) {
         assert.equal(err, null);
-        assert(found && found.length > 0);
-        
+        assert.equal(found.length, 5);
         done();
       });
     });
   });
 
-  test('> finding requires', function(done) {
-    var anatomia = require('../lib')();
-    var searchFor = 'require()';
-    anatomia.translator.read(__dirname + '/data/other/complex.js', function(err, trees) {
+  test('function invocation', function(done) {
+    var searchFor = 'method()';
+    anatomia.translator.read(__dirname + '/data/other/specific.js', function(err, trees) {
       var item = trees.pop();
       anatomia.finder.query(searchFor, item.tree, function(err, found) {
         assert.equal(err, null);
-        assert.equal(found.length, 11);
-        done();
-      });
-    });
-  });
-
-  test('> finding using all as a method name', function(done) {
-    var anatomia = require('../lib')();
-    var searchFor = 'field._all_()';
-    anatomia.translator.read(__dirname + '/data/other/complex.js', function(err, trees) {
-      var item = trees.pop();
-      anatomia.finder.query(searchFor, item.tree, function(err, found) {
-        assert.equal(err, null);
-        assert.equal(found.length, 7);
+        assert.equal(found.length, 3);
         // displayFounds(found, item.source);
         done();
       });
