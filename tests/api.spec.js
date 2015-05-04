@@ -7,8 +7,11 @@ suite('Core API', function() {
 
   var displayFounds = function(found, source) {
     found.forEach(function(f) {
-      console.log(anatomia.translator.locToString(f.loc, source));
+      console.log(toStr(f, source));
     });
+  }
+  var toStr = function(f, source) {
+    return anatomia.translator.locToString(f.loc, source);
   }
 
   test('Is there API available', function(done) {
@@ -34,7 +37,7 @@ suite('Core API', function() {
     var searchFor = 'answer + addition;';
     anatomia.translator.read(__dirname + '/data/app/folder/module.js', function(err, trees) {
       var item = trees.pop();
-      anatomia.finder.query(searchFor, item.tree, { exact: true }, function(err, found) {
+      anatomia.finder.query(searchFor, item.tree, function(err, found) {
         assert.equal(found.length, 1);
         var str = anatomia.translator.locToString(found[0].loc, item.source);
         assert.equal(searchFor, str);
@@ -49,7 +52,7 @@ suite('Core API', function() {
     }';
     anatomia.translator.read(__dirname + '/data/other/helper.js', function(err, trees) {
       var item = trees.pop();
-      anatomia.finder.query(searchFor, item.tree, function(err, found) {
+      anatomia.finder.query(searchFor, item.tree, { exact: false }, function(err, found) {
         assert.equal(err, null);
         assert.equal(found.length, 1);
         done();
@@ -61,7 +64,7 @@ suite('Core API', function() {
     var searchFor = 'this.choices_count()';
     anatomia.translator.read(__dirname + '/data/other/chosen.proto.js', function(err, trees) {
       var item = trees.pop();
-      anatomia.finder.query(searchFor, item.tree, function(err, found) {
+      anatomia.finder.query(searchFor, item.tree, { exact: false }, function(err, found) {
         assert.equal(err, null);
         assert.equal(found.length, 121);
         done();
@@ -73,9 +76,9 @@ suite('Core API', function() {
     var searchFor = 'var something';
     anatomia.translator.read(__dirname + '/data/other/specific.js', function(err, trees) {
       var item = trees.pop();
-      anatomia.finder.query(searchFor, item.tree, function(err, found) {
+      anatomia.finder.query(searchFor, item.tree, { exact: false}, function(err, found) {
         assert.equal(err, null);
-        assert.equal(found.length, 5);
+        assert.equal(found.length, 8);
         done();
       });
     });
@@ -85,10 +88,50 @@ suite('Core API', function() {
     var searchFor = 'method()';
     anatomia.translator.read(__dirname + '/data/other/specific.js', function(err, trees) {
       var item = trees.pop();
+      anatomia.finder.query(searchFor, item.tree, { exact: false}, function(err, found) {
+        assert.equal(err, null);
+        assert.equal(found.length, 5);
+        // displayFounds(found, item.source);
+        done();
+      });
+    });
+  });
+
+  test('specific function invocation', function(done) {
+    var searchFor = 'f(\'nothing here\')';
+    anatomia.translator.read(__dirname + '/data/other/specific.js', function(err, trees) {
+      var item = trees.pop();
       anatomia.finder.query(searchFor, item.tree, function(err, found) {
         assert.equal(err, null);
-        assert.equal(found.length, 3);
+        assert.equal(found.length, 1);
         // displayFounds(found, item.source);
+        done();
+      });
+    });
+  });
+
+  test('using placeholder', function(done) {
+    var searchFor = 'app.$$$()';
+    anatomia.translator.read(__dirname + '/data/other/specific.js', function(err, trees) {
+      var item = trees.pop();
+      anatomia.finder.query(searchFor, item.tree, function(err, found) {
+        assert.equal(err, null);
+        assert.equal(found.length, 2);
+        // displayFounds(found, item.source);
+        done();
+      });
+    });
+  });
+
+  test('using multiple placeholders', function(done) {
+    var searchFor = 'while($$$) {\
+      _results.push(nr.remove());\
+    }';
+    anatomia.translator.read(__dirname + '/data/other/chosen.proto.js', function(err, trees) {
+      var item = trees.pop();
+      anatomia.finder.query(searchFor, item.tree, function(err, found) {
+        assert.equal(err, null);
+        assert.equal(found.length, 1);
         done();
       });
     });
