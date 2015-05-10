@@ -137,14 +137,4 @@ suite('Core API', function() {
     });
   });
 
-  test.only('using instrumentor', function(done) {
-    anatomia.translator.read(__dirname + '/data/other/helper.js', function(err, trees) {
-      var item = trees.pop();
-      anatomia.instrumentor.process(item.source, function(err, anotated) {
-        console.log(anotated);
-        done();
-      });
-    });
-  });
-
 });

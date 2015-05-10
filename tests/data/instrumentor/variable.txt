@@ -1,0 +1,6 @@
+_A('V', 'test', '1,0,1,14');var test = 10;
+_A('V', 'a, b, c', '2,0,2,22');var a, b = {}, c = [];
+function newMethod(e) {
+  _A('V', 'd_d', '4,2,4,19');var d_d = e + 10;
+  return d_d;
+}
