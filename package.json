@@ -15,11 +15,12 @@
     "estraverse": "4.0.0",
     "falafel": "1.0.1",
     "glob": "5.0.5",
-    "lodash": "3.7.0"
+    "js-tokens": "1.0.1"
   },
   "devDependencies": {
-    "mocha": "2.0.1",
-    "jshint": "2.5.10"
+    "chai": "^3.0.0",
+    "jshint": "2.5.10",
+    "mocha": "2.0.1"
   },
   "keywords": [
     "ast",
