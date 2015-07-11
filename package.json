@@ -10,12 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "escodegen": "1.6.1",
-    "esprima": "1.2.5",
-    "estraverse": "4.0.0",
-    "falafel": "1.0.1",
-    "glob": "5.0.5",
-    "js-tokens": "1.0.1"
+    "acorn": "2.0.4"
   },
   "devDependencies": {
     "chai": "^3.0.0",
