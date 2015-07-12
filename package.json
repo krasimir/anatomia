@@ -13,7 +13,10 @@
     "acorn": "2.0.4"
   },
   "devDependencies": {
-    "chai": "^3.0.0",
+    "chai": "3.0.0",
+    "gulp": "3.9.0",
+    "gulp-shell": "0.4.2",
+    "gulp-util": "^3.0.6",
     "jshint": "2.5.10",
     "mocha": "2.0.1"
   },
